@@ -1,0 +1,96 @@
+#Tarea 5 - Arbol de Desición
+Krycia Castillo
+
+```{r}
+install.packages("rpart")
+install.packages("rpart.plot")
+
+```
+
+```{r}
+library(rpart)
+library(rpart.plot)
+```
+```{r}
+#Cargando los datos a utilizar, en este caso se selección el dataset Hogar:
+
+hogar <- read.csv('C:/Users/lmpgp/Downloads/Kry/db_csv_/HOGAR_BDP.csv', sep = ',')
+```
+
+```{r}
+#Se procede a crear el árbol para predecir la variable ÁREA para lo cual se utiliza rpart, se indica la variable a predecir, las variables a utilizar para la predicción, el dataset y el método a utilizar: 
+arbol <- rpart(AREA ~
+                  PCH5+
+                  PCH8+
+                  PCH9_B+
+                  PCH9_F+
+                  PCH9_J+
+                  PCH9_K+
+                  PCH10,
+                data = hogar, method = "class")
+```
+
+```{r}
+#Se grafica el árbol utilizando rpart.plot:
+rpart.plot(arbol, type=2, extra=0, under = TRUE, fallen.leaves = TRUE, box.palette = "BuGn", 
+           main ="Predicción de recepción de área", cex = 0.5)
+
+#Las variables más determinantes son PCH10 ¿Cómo elimina la mayor parte de la basura en el hogar? y PCH5 ¿Qué tipo de servicio sanitario tiene este hogar?
+```
+
+
+```{r}
+#Se realiza una predicción asignando valores a las variables utilizadas para realizar el árbol obteniendo el resultado de que el pertenece al área rural:
+
+hogarR <- data.frame(
+  PCH5=c(4),
+  PCH8=c(1),
+  PCH9_B=c(1),
+  PCH9_F=c(1),
+  PCH9_J=c(2),
+  PCH9_K=c(1),
+  PCH10=c(4)
+)
+
+result <- predict(arbol,hogarR, type="class")
+result
+```
+```{r}
+#Se modifican los valores de las variables obteniendo el resultado de que pertenecen al área urbana: 
+hogarR2 <- data.frame(
+  PCH5=c(4),
+  PCH8=c(1),
+  PCH9_B=c(1),
+  PCH9_F=c(1),
+  PCH9_J=c(2),
+  PCH9_K=c(2),
+  PCH10=c(2)
+)
+
+result2 <- predict(arbol,hogarR2, type="class")
+result2
+```
+```{r}
+#SE agregaron variables para la generación del árbol:
+
+arbol1 <- rpart(AREA ~
+                  PCH5+
+                  PCH7+
+                  PCH8+
+                  PCH9_F+
+                  PCH9_G+
+                  PCH9_I+
+                  PCH9_K+
+                  PCH10+
+                  PCH13+
+                  PCH14,
+                data = hogar, method = "class")
+
+```
+
+```{r}
+#Se graficó el árbol de nuevo:
+
+rpart.plot(arbol1, type=2, extra=0, under = TRUE, fallen.leaves = TRUE, box.palette = "BuGn", 
+           main ="Predicción de recepción de área", cex = 0.5)
+```
